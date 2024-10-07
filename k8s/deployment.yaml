@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-hello-world
+spec:
+  replicas: 3  # Número de réplicas/pods
+  selector:
+    matchLabels:
+      app: node-hello-world
+  template:
+    metadata:
+      labels:
+        app: node-hello-world
+    spec:
+      containers:
+      - name: node-hello-world
+        image: oliheitor/node-hello-world:latest # Atualize se necessário com o repositório de imagem Docker Hub
+        ports:
+        - containerPort: 3000
