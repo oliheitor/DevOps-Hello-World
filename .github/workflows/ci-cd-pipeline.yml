@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       # Checkout do código fonte
@@ -28,7 +28,7 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USERNAME }}/node-hello-world:${{ github.sha }}
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
 
     steps:
