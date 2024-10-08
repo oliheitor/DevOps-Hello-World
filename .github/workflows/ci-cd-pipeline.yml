@@ -16,15 +16,15 @@ jobs:
 
     - name: Login to Docker Hub
       run: |
-        $dockerUsername = "${{ secrets.DOCKER_USERNAME }}"
-        $dockerPassword = "${{ secrets.DOCKER_PASSWORD }}"
+        dockerUsername="${{ secrets.DOCKER_USERNAME }}"
+        dockerPassword="${{ secrets.DOCKER_PASSWORD }}"
         echo $dockerPassword | docker login -u $dockerUsername --password-stdin
-      shell: pwsh
+      shell: bash
 
     - name: Build Docker Image
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/node-hello-world:${{ github.sha }} .
-      shell: pwsh
+      shell: bash
 
     - name: Push Docker Image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/node-hello-world:${{ github.sha }}
-      shell: pwsh
+      shell: bash
