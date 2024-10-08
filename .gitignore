@@ -1,0 +1,15 @@
+# Ignorar o diretório actions-runner (onde está o GitHub Actions runner local)
+actions-runner/
+
+# Ignorar dependências do Node.js
+node_modules/
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar arquivos de ambiente
+.env
+
+# Ignorar arquivos temporários do sistema
+.DS_Store
+Thumbs.db
