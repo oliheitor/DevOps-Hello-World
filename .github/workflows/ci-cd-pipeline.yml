@@ -2,35 +2,30 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ master ]  # Ajuste para "main" se necessário
+    branches: [ master ]
   pull_request:
-    branches: [ master ]  # Ajuste para "main" se necessário
+    branches: [ master ]
 
 jobs:
   build:
-    runs-on: self-hosted  # Especificando que o job rodará no runner self-hosted (local)
+    runs-on: self-hosted
 
     steps:
       # Checkout do código fonte
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Login no Docker Hub usando arquivo de configuração com ajuste para PowerShell
-      - name: Login to Docker Hub (Windows)
-        run: |
-          $username = "${{ secrets.DOCKER_USERNAME }}"
-          $password = "${{ secrets.DOCKER_PASSWORD }}"
-          $base64Auth = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("${username}:${password}"))
-          $json = "{`"auths`": {`"https://index.docker.io/v1/`": {`"auth`": `"$base64Auth`" } } }"
-          Set-Content -Path "$HOME/.docker/config.json" -Value $json
+      # Login no Docker Hub usando secrets
+      - name: Login to Docker Hub
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      # Build da imagem Docker com nome correto
+      # Build da imagem Docker
       - name: Build Docker Image
-        run: docker build -t $env:DOCKER_USERNAME/node-hello-world:${{ github.sha }} .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/node-hello-world:${{ github.sha }} .
 
       # Push da imagem para o Docker Registry
       - name: Push Docker Image
-        run: docker push $env:DOCKER_USERNAME/node-hello-world:${{ github.sha }}
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/node-hello-world:${{ github.sha }}
 
   deploy:
     runs-on: self-hosted
@@ -41,11 +36,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Configurar o `kubectl` no Windows usando o secret `KUBECONFIG`
+      # Configurar o `kubectl` usando o secret `KUBECONFIG`
       - name: Setup kubectl
         run: |
-          echo "${{ secrets.KUBECONFIG }}" > C:/Temp/kubeconfig
-          $env:KUBECONFIG = "C:/Temp/kubeconfig"
+          echo "${{ secrets.KUBECONFIG }}" > /tmp/kubeconfig
+          export KUBECONFIG=/tmp/kubeconfig
 
       # Deploy da nova imagem no Kubernetes
       - name: Deploy to Kubernetes
