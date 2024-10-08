@@ -15,10 +15,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Login no Docker Hub usando arquivo de configuração
+      # Login no Docker Hub usando arquivo de configuração com ajuste para PowerShell
       - name: Login to Docker Hub (Windows)
         run: |
-          echo "{\"auths\":{\"https://index.docker.io/v1/\":{\"auth\":\"$(echo -n $env:DOCKER_USERNAME:$env:DOCKER_PASSWORD | [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes()))\"}}}" > $HOME/.docker/config.json
+          $username = $env:DOCKER_USERNAME
+          $password = $env:DOCKER_PASSWORD
+          $base64Auth = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("$username:$password"))
+          $json = "{ `"auths`": { `"https://index.docker.io/v1/`": { `"auth`": `"$base64Auth`" } } }"
+          $json | Set-Content -Path "$HOME/.docker/config.json"
 
       # Build da imagem Docker com nome correto
       - name: Build Docker Image
