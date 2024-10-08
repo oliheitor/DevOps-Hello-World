@@ -2,13 +2,13 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master ]  # Ajuste para "main" se necessário
   pull_request:
-    branches: [ master ]
+    branches: [ master ]  # Ajuste para "main" se necessário
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: self-hosted  # Especificando que o job rodará no runner self-hosted (local)
 
     steps:
       # Checkout do código fonte
@@ -17,7 +17,9 @@ jobs:
 
       # Login no Docker Hub usando secrets
       - name: Login to Docker Hub
-        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        run: |
+          set -e
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       # Build da imagem Docker com nome correto
       - name: Build Docker Image
@@ -36,11 +38,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Configurar o `kubectl` usando o secret `KUBECONFIG`
+      # Configurar o `kubectl` no Windows usando o secret `KUBECONFIG`
       - name: Setup kubectl
         run: |
-          echo "${{ secrets.KUBECONFIG }}" > /tmp/kubeconfig
-          export KUBECONFIG=/tmp/kubeconfig
+          echo "${{ secrets.KUBECONFIG }}" > C:/Temp/kubeconfig
+          $env:KUBECONFIG = "C:/Temp/kubeconfig"
 
       # Deploy da nova imagem no Kubernetes
       - name: Deploy to Kubernetes
