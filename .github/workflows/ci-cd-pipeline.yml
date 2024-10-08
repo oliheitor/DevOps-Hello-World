@@ -15,11 +15,16 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Login to Docker Hub
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      run: |
+        $dockerUsername = "${{ secrets.DOCKER_USERNAME }}"
+        $dockerPassword = "${{ secrets.DOCKER_PASSWORD }}"
+        echo $dockerPassword | docker login -u $dockerUsername --password-stdin
+      shell: pwsh
 
     - name: Build Docker Image
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/node-hello-world:${{ github.sha }} .
+      shell: pwsh
 
     - name: Push Docker Image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/node-hello-world:${{ github.sha }}
-      # teste
+      shell: pwsh
