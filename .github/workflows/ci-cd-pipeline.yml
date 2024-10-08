@@ -22,3 +22,4 @@ jobs:
 
     - name: Push Docker Image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/node-hello-world:${{ github.sha }}
+      # teste
