@@ -17,21 +17,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Passo 2: Definir diretório de trabalho
-      - name: Change working directory
-        run: /home/oliheitor/actions-runner/DevOps
-
-      # Passo 3: Login no Docker Hub usando o token
+      # Passo 2: Login no Docker Hub usando o token
       - name: Login to Docker Hub
+        shell: bash
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      # Passo 4: Build da imagem Docker
+      # Passo 3: Build da imagem Docker
       - name: Build Docker Image
+        shell: bash
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/node-hello-world:${{ github.sha }} .
 
-      # Passo 5: Push da imagem Docker
+      # Passo 4: Push da imagem Docker
       - name: Push Docker Image
+        shell: bash
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/node-hello-world:${{ github.sha }}
+
+          
