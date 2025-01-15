@@ -19,7 +19,7 @@ jobs:
 
       # Passo 2: Definir diretório de trabalho
       - name: Change working directory
-        run: cd ${{ github.workspace }}
+        run: cd /home/oliheitor/actions-runner/DevOps-Hello-World
 
       # Passo 3: Login no Docker Hub usando o token
       - name: Login to Docker Hub
