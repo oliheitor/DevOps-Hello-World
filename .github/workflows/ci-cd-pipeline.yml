@@ -19,7 +19,7 @@ jobs:
 
       # Passo 2: Definir diretório de trabalho
       - name: Change working directory
-        run: cd /home/oliheitor/actions-runner/DevOps-Hello-World
+        run: cd /home/oliheitor/actions-runner/DevOps
 
       # Passo 3: Login no Docker Hub usando o token
       - name: Login to Docker Hub
@@ -35,4 +35,3 @@ jobs:
       - name: Push Docker Image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/node-hello-world:${{ github.sha }}
-          
