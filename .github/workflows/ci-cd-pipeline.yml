@@ -38,3 +38,4 @@ jobs:
         working-directory: /home/oliheitor/actions-runner/DevOps
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/node-hello-world:${{ github.sha }}
+          
